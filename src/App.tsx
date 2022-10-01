@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalendarHeader from "./components/CalendarHeader";
 import Days from "./components/Days";
 import { days, event } from "./util/types";
@@ -15,6 +15,10 @@ function App() {
   const [addEventModel, setAddEventModel] = useState(false);
 
   const { dateDisplay, days } = useDate({ events, nav });
+
+  useEffect(() => {
+    localStorage.setItem("events", JSON.stringify(events))
+  }, [events])
 
   const saveEventHandle = (event: event) => {
     if (events.find((e) => e.date === event.date) === undefined) {
