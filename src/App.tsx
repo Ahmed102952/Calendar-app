@@ -1,24 +1,135 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import CalendarHeader from "./components/CalendarHeader";
+import Days from "./components/Days";
+import { days, event } from "./util/types";
+import { weekdays } from "./util/weeksDays";
+import AddEventForm from "./components/AddEventForm";
+import ShowEvents from "./components/ShowEvents";
 
 function App() {
+  const [events, setEvents] = useState<event[]>(
+    localStorage.getItem("events")
+      ? JSON.parse(localStorage.getItem("events") as string)
+      : []
+  );
+  const [clicked, setClicked] = useState("");
+  const [days, setDays] = useState<days>([]);
+  const [nav, setNav] = useState(0);
+  const [dateDisplay, setDateDisplay] = useState("");
+  const [showEventModel, setShowEventModel] = useState(false);
+  const [addEventModel, setAddEventModel] = useState(false);
+
+  const saveEventHandle = (event: event) => {
+    if (events.find((e) => e.date === event.date) === undefined) {
+      let arr = events;
+      arr.push(event);
+      setEvents(arr);
+      localStorage.setItem("events", JSON.stringify(arr));
+      setAddEventModel(false);
+    } else {
+      window.alert("erro");
+    }
+  };
+  const deleteEventHandle = (event: event) => {
+    let arr = events;
+    setEvents(arr.filter((e) => e.date !== event.date));
+    localStorage.setItem("events", JSON.stringify(arr));
+    setShowEventModel(false);
+  };
+  useEffect(() => {
+    const dt = new Date();
+
+    if (nav !== 0) {
+      dt.setMonth(new Date().getMonth() + nav);
+    }
+
+    const day = dt.getDate();
+    const month = dt.getMonth();
+    const year = dt.getFullYear();
+
+    const firstDayOfMonth = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const dateString = firstDayOfMonth.toLocaleDateString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
+
+    const paddingDays = weekdays.indexOf(dateString.split(", ")[0]);
+
+    setDateDisplay(
+      `${dt.toLocaleDateString("en-us", { month: "long" })} ${year}`
+    );
+
+    let daysArr = [];
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dayString = `${i.toLocaleString("en-us", {
+        minimumIntegerDigits: 2,
+      })}-${month + 1}-${year}`;
+
+      daysArr.push({
+        value: i,
+        dayString: dayString,
+        isCurrentDay: i === day && nav === 0,
+      });
+    }
+    setDays(daysArr);
+  }, [events, nav]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App px-16 py-6">
+      <CalendarHeader currentDate={dateDisplay} />
+      <div className="grid col-span-7 grid-cols-7 place-items-center py-4">
+        {weekdays.map((d, i) => {
+          return (
+            <div
+              key={i}
+              className={`flex-grow text-center rounded-full py-2 px-4 font-medium text-veryDarkBlue text-opacity-90`}
+            >
+              <p className="capitalize">{d}</p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="w-full grid grid-cols-7 content-start gap-px bg-black bg-opacity-10 border-t border-black border-opacity-5">
+        {days.map((d, i) => {
+          return (
+            <Days
+              key={i}
+              value={d.value}
+              event={events.find((e) => e.date === d.dayString)}
+              onClick={() => {
+                setClicked(d.dayString);
+                events.find((e) => e.date === d.dayString)
+                  ? setShowEventModel(true)
+                  : setAddEventModel(true);
+              }}
+              currentDay={d.isCurrentDay}
+            />
+          );
+        })}
+      </div>
+      {showEventModel ? (
+        <div className="absolute px-6 py-4 bg-white shadow-md rounded-md top-20 left-1/2 -translate-x-1/2">
+          <ShowEvents
+            event={events.find((e) => e.date === clicked)}
+            date={clicked}
+            onClose={() => setShowEventModel(false)}
+            onDel={deleteEventHandle}
+          />
+        </div>
+      ) : null}
+      {addEventModel ? (
+        <div className="absolute px-8 py-4 bg-white shadow-md rounded-md top-20 left-1/2 -translate-x-1/2">
+          <AddEventForm
+            onSave={saveEventHandle}
+            onClose={() => setAddEventModel(false)}
+            clickeddate={clicked}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
