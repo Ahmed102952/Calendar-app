@@ -8,7 +8,9 @@ import ShowEvents from "./components/ShowEvents";
 import useDate from "./Hooks/useDate";
 
 function App() {
-  const [events, setEvents] = useState<event[]>([]);
+  const [events, setEvents] = useState<event[]>(
+    localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events") as string) : []
+  );
   const [clicked, setClicked] = useState("");
   const [nav, setNav] = useState(0);
   const [showEventModel, setShowEventModel] = useState(false);
@@ -17,8 +19,8 @@ function App() {
   const { dateDisplay, days } = useDate({ events, nav });
 
   useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(events))
-  }, [events])
+    localStorage.setItem("events", JSON.stringify(events));
+  }, [events]);
 
   const saveEventHandle = (event: event) => {
     if (events.find((e) => e.date === event.date) === undefined) {

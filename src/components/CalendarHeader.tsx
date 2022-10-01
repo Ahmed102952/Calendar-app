@@ -12,13 +12,13 @@ const CalendarHeader = ({currentDate, next, back, addEvent}: claendarHeaderProps
         {currentDate}
       </p>
       <button
-        className="border border-r-0 border-black border-opacity-10 w-10 h-10 font-bold"
+        className="border border-r-0 border-black border-opacity-10 w-10 h-10 font-bold text-xl"
         onClick={back}
       >
         &lt;
       </button>
       <button
-        className="border border-black border-opacity-10 w-10 h-10 font-bold"
+        className="border border-black border-opacity-10 w-10 h-10 font-bold text-xl"
         onClick={next}
       >
         &gt;
