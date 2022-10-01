@@ -1,86 +1,45 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CalendarHeader from "./components/CalendarHeader";
 import Days from "./components/Days";
 import { days, event } from "./util/types";
 import { weekdays } from "./util/weeksDays";
 import AddEventForm from "./components/AddEventForm";
 import ShowEvents from "./components/ShowEvents";
+import useDate from "./Hooks/useDate";
 
 function App() {
-  const [events, setEvents] = useState<event[]>(
-    localStorage.getItem("events")
-      ? JSON.parse(localStorage.getItem("events") as string)
-      : []
-  );
+  const [events, setEvents] = useState<event[]>([]);
   const [clicked, setClicked] = useState("");
-  const [days, setDays] = useState<days>([]);
   const [nav, setNav] = useState(0);
-  const [dateDisplay, setDateDisplay] = useState("");
   const [showEventModel, setShowEventModel] = useState(false);
   const [addEventModel, setAddEventModel] = useState(false);
+
+  const { dateDisplay, days } = useDate({ events, nav });
 
   const saveEventHandle = (event: event) => {
     if (events.find((e) => e.date === event.date) === undefined) {
       let arr = events;
       arr.push(event);
       setEvents(arr);
-      localStorage.setItem("events", JSON.stringify(arr));
       setAddEventModel(false);
     } else {
-      window.alert("erro");
+      window.alert("You have an event in that date");
     }
   };
   const deleteEventHandle = (event: event) => {
     let arr = events;
     setEvents(arr.filter((e) => e.date !== event.date));
-    localStorage.setItem("events", JSON.stringify(arr));
     setShowEventModel(false);
   };
-  useEffect(() => {
-    const dt = new Date();
 
-    if (nav !== 0) {
-      dt.setMonth(new Date().getMonth() + nav);
-    }
-
-    const day = dt.getDate();
-    const month = dt.getMonth();
-    const year = dt.getFullYear();
-
-    const firstDayOfMonth = new Date(year, month, 1);
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    const dateString = firstDayOfMonth.toLocaleDateString("en-us", {
-      weekday: "long",
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    });
-
-    const paddingDays = weekdays.indexOf(dateString.split(", ")[0]);
-
-    setDateDisplay(
-      `${dt.toLocaleDateString("en-us", { month: "long" })} ${year}`
-    );
-
-    let daysArr = [];
-
-    for (let i = 1; i <= daysInMonth; i++) {
-      const dayString = `${i.toLocaleString("en-us", {
-        minimumIntegerDigits: 2,
-      })}-${month + 1}-${year}`;
-
-      daysArr.push({
-        value: i,
-        dayString: dayString,
-        isCurrentDay: i === day && nav === 0,
-      });
-    }
-    setDays(daysArr);
-  }, [events, nav]);
   return (
     <div className="App px-16 py-6">
-      <CalendarHeader currentDate={dateDisplay} />
+      <CalendarHeader
+        currentDate={dateDisplay}
+        addEvent={() => setAddEventModel(true)}
+        next={() => setNav(nav + 1)}
+        back={() => setNav(nav - 1)}
+      />
       <div className="grid col-span-7 grid-cols-7 place-items-center py-4">
         {weekdays.map((d, i) => {
           return (
