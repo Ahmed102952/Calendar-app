@@ -1,15 +1,16 @@
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react";
 import { days, event } from "../util/types";
 import { weekdays } from "../util/weeksDays";
 
 interface useDate {
-  events: event[]
-  nav: number,
+  events: event[];
+  nav: number;
 }
 
-const useDate = ({events, nav}: useDate) => {
+const useDate = ({ events, nav }: useDate) => {
   const [days, setDays] = useState<days>([]);
   const [dateDisplay, setDateDisplay] = useState("");
+  const [paddingDays, setPaddingDays] = useState(0);
   useEffect(() => {
     const dt = new Date();
 
@@ -25,13 +26,12 @@ const useDate = ({events, nav}: useDate) => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const dateString = firstDayOfMonth.toLocaleDateString("en-us", {
-      weekday: "long",
+      weekday: "short",
       year: "numeric",
       month: "numeric",
       day: "numeric",
     });
-
-    const paddingDays = weekdays.indexOf(dateString.split(", ")[0]);
+    setPaddingDays(weekdays.indexOf(dateString.split(', ')[0]) + 1);
 
     setDateDisplay(
       `${dt.toLocaleDateString("en-us", { month: "long" })} ${year}`
@@ -54,8 +54,10 @@ const useDate = ({events, nav}: useDate) => {
   }, [events, nav]);
 
   return {
-    days, dateDisplay
-  }
-}
+    days,
+    dateDisplay,
+    paddingDays
+  };
+};
 
-export default useDate
+export default useDate;

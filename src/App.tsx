@@ -16,7 +16,7 @@ function App() {
   const [showEventModel, setShowEventModel] = useState(false);
   const [addEventModel, setAddEventModel] = useState(false);
 
-  const { dateDisplay, days } = useDate({ events, nav });
+  const { dateDisplay, days, paddingDays } = useDate({ events, nav });
 
   useEffect(() => {
     localStorage.setItem("events", JSON.stringify(events));
@@ -64,6 +64,7 @@ function App() {
             <Days
               key={i}
               value={d.value}
+              paddingDays={paddingDays}
               event={events.find((e) => e.date === d.dayString)}
               onClick={() => {
                 setClicked(d.dayString);
