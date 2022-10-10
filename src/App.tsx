@@ -9,7 +9,9 @@ import useDate from "./Hooks/useDate";
 
 function App() {
   const [events, setEvents] = useState<event[]>(
-    localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events") as string) : []
+    localStorage.getItem("events")
+      ? JSON.parse(localStorage.getItem("events") as string)
+      : []
   );
   const [clicked, setClicked] = useState("");
   const [nav, setNav] = useState(0);
@@ -18,15 +20,12 @@ function App() {
 
   const { dateDisplay, days, paddingDays } = useDate({ events, nav });
 
-  useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(events));
-  }, [events]);
-
   const saveEventHandle = (event: event) => {
     if (events.find((e) => e.date === event.date) === undefined) {
       let arr = events;
       arr.push(event);
       setEvents(arr);
+      localStorage.setItem("events", JSON.stringify(arr))
       setAddEventModel(false);
     } else {
       window.alert("You have an event in that date");
@@ -35,8 +34,10 @@ function App() {
   const deleteEventHandle = (event: event) => {
     let arr = events;
     setEvents(arr.filter((e) => e.date !== event.date));
+    localStorage.setItem("events", JSON.stringify(arr))
     setShowEventModel(false);
   };
+
 
   return (
     <div className="App px-16 py-6">

@@ -31,7 +31,7 @@ const useDate = ({ events, nav }: useDate) => {
       month: "numeric",
       day: "numeric",
     });
-    setPaddingDays(weekdays.indexOf(dateString.split(', ')[0]) + 1);
+    setPaddingDays(weekdays.indexOf(dateString.split(", ")[0]) + 1);
 
     setDateDisplay(
       `${dt.toLocaleDateString("en-us", { month: "long" })} ${year}`
@@ -53,10 +53,11 @@ const useDate = ({ events, nav }: useDate) => {
     setDays(daysArr);
   }, [events, nav]);
 
+
   return {
     days,
     dateDisplay,
-    paddingDays
+    paddingDays,
   };
 };
 
