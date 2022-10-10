@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CalendarHeader from "./components/CalendarHeader";
 import Days from "./components/Days";
-import { days, event } from "./util/types";
+import { event } from "./util/types";
 import { weekdays } from "./util/weeksDays";
 import AddEventForm from "./components/AddEventForm";
 import ShowEvents from "./components/ShowEvents";

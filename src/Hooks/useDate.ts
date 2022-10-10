@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { days, event } from "../util/types";
 import { weekdays } from "../util/weeksDays";
 
-interface useDate {
+interface useDateProps {
   events: event[];
   nav: number;
 }
 
-const useDate = ({ events, nav }: useDate) => {
+const useDate = ({ events, nav }: useDateProps) => {
   const [days, setDays] = useState<days>([]);
   const [dateDisplay, setDateDisplay] = useState("");
   const [paddingDays, setPaddingDays] = useState(0);
