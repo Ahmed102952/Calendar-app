@@ -40,64 +40,66 @@ function App() {
 
 
   return (
-    <div className="App px-16 py-6">
+    <div className="App px-4 py-2 md:px-24 sm:py-6">
       <CalendarHeader
         currentDate={dateDisplay}
         addEvent={() => setAddEventModel(true)}
         next={() => setNav(nav + 1)}
         back={() => setNav(nav - 1)}
       />
-      <div className="grid col-span-7 grid-cols-7 place-items-center py-4">
-        {weekdays.map((d, i) => {
-          return (
-            <div
-              key={i}
-              className={`flex-grow text-center rounded-full py-2 px-4 font-medium text-veryDarkBlue text-opacity-90`}
-            >
-              <p className="capitalize">{d}</p>
-            </div>
-          );
-        })}
-      </div>
-      <div className="w-full grid grid-cols-7 content-start gap-px bg-black bg-opacity-10 border-t border-black border-opacity-5">
-        {days.map((d, i) => {
-          return (
-            <Days
-              key={i}
-              value={d.value}
-              paddingDays={paddingDays}
-              event={events.find((e) => e.date === d.dayString)}
-              onClick={() => {
-                setClicked(d.dayString);
-                events.find((e) => e.date === d.dayString)
-                  ? setShowEventModel(true)
-                  : setAddEventModel(true);
-              }}
-              currentDay={d.isCurrentDay}
+      <main className="md:px-14">
+        <div className="grid col-span-7 grid-cols-7 place-items-center py-4 mt-5">
+          {weekdays.map((d, i) => {
+            return (
+              <div
+                key={i}
+                className={`flex-grow text-center rounded-full py-2 px-4 font-medium text-veryDarkBlue text-opacity-90`}
+              >
+                <p className="capitalize">{d}</p>
+              </div>
+            );
+          })}
+        </div>
+        <div className="w-full grid grid-cols-7 content-start gap-px bg-black bg-opacity-10 border-t border-black border-opacity-5">
+          {days.map((d, i) => {
+            return (
+              <Days
+                key={i}
+                value={d.value}
+                paddingDays={paddingDays}
+                event={events.find((e) => e.date === d.dayString)}
+                onClick={() => {
+                  setClicked(d.dayString);
+                  events.find((e) => e.date === d.dayString)
+                    ? setShowEventModel(true)
+                    : setAddEventModel(true);
+                }}
+                currentDay={d.isCurrentDay}
+              />
+            );
+          })}
+        </div>
+        </main>
+        {showEventModel ? (
+          <div className="absolute px-6 py-4 bg-white shadow-md rounded-md top-20 left-1/2 -translate-x-1/2">
+            <ShowEvents
+              event={events.find((e) => e.date === clicked)}
+              date={clicked}
+              onClose={() => setShowEventModel(false)}
+              onDel={deleteEventHandle}
             />
-          );
-        })}
-      </div>
-      {showEventModel ? (
-        <div className="absolute px-6 py-4 bg-white shadow-md rounded-md top-20 left-1/2 -translate-x-1/2">
-          <ShowEvents
-            event={events.find((e) => e.date === clicked)}
-            date={clicked}
-            onClose={() => setShowEventModel(false)}
-            onDel={deleteEventHandle}
-          />
-        </div>
-      ) : null}
-      {addEventModel ? (
-        <div className="absolute px-8 py-4 bg-white shadow-md rounded-md top-20 left-1/2 -translate-x-1/2">
-          <AddEventForm
-            onSave={saveEventHandle}
-            onClose={() => setAddEventModel(false)}
-            clickeddate={clicked}
-          />
-        </div>
-      ) : null}
-    </div>
+          </div>
+        ) : null}
+        {addEventModel ? (
+          <div className="absolute px-8 py-4 bg-white shadow-md rounded-md top-20 left-1/2 -translate-x-1/2">
+            <AddEventForm
+              onSave={saveEventHandle}
+              onClose={() => setAddEventModel(false)}
+              clickeddate={clicked}
+            />
+          </div>
+        ) : null}
+            </div>
   );
 }
 

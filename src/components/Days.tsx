@@ -1,6 +1,4 @@
 import { event } from "../util/types";
-import { weekdays } from "../util/weeksDays";
-
 interface daysPorps {
   value: number;
   onClick: () => void;
@@ -11,7 +9,7 @@ interface daysPorps {
 const Days = ({ value, onClick, event, currentDay,paddingDays }: daysPorps) => {
   return (
     <div
-      className={`bg-white aspect-square p-4 font-medium text-lg flex flex-col justify-between cursor-pointer ${
+      className={`bg-white aspect-square p-1 font-medium text-sm flex flex-col justify-between cursor-pointer ${
         currentDay
           ? "bg-blue text-white bg-opacity-50"
           : "hover:bg-blue hover:bg-opacity-25"
@@ -21,7 +19,7 @@ const Days = ({ value, onClick, event, currentDay,paddingDays }: daysPorps) => {
     >
       <p>{value}</p>
       {event ? (
-        <div className="bg-veryDarkBlue text-white text-lg rounded-md px-2 py-2">
+        <div className="bg-veryDarkBlue text-white text-lg rounded-md w-2 h-2 sm:w-full sm:h-auto sm:px-4 sm:py-2 overflow-hidden text-opacity-0 sm:text-opacity-100">
           {event.title}
         </div>
       ) : null}

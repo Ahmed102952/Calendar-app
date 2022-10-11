@@ -23,7 +23,7 @@ const CalendarHeader = ({currentDate, next, back, addEvent}: claendarHeaderProps
       >
         &gt;
       </button>
-      <button onClick={addEvent} className="bg-veryDarkBlue text-white text-lg font-medium px-4 py-2 rounded-md shadow-md ml-4">Add Event</button>
+      <button onClick={addEvent} className="bg-veryDarkBlue text-white text-sm md:text-lg font-medium px-2 py-1 md:px-4 md:py-2 ml-1 md:ml-4 rounded-md shadow-md">Add Event</button>
     </header>
   );
 };
